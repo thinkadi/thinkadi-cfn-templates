@@ -1,0 +1,20 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": {
+        "R53HZROOT": {
+            "Type": "AWS::Route53::HostedZone",
+            "Properties": {
+                "Name": "thinkadi.com",
+                "HostedZoneConfig": {
+                    "Comment": "The root hosted zone for thinkadi.com."
+                },
+                "HostedZoneTags": [
+                    {
+                        "Key": "app",
+                        "Value": "thinkadi"
+                    }
+                ]
+            }
+        }
+    }
+}
