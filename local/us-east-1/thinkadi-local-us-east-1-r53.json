@@ -4,7 +4,7 @@
         "R53HZROOT": {
             "Type": "AWS::Route53::HostedZone",
             "Properties": {
-                "Name": "thinkadi.com1",
+                "Name": "thinkadi.com",
                 "HostedZoneConfig": {
                     "Comment": "The root hosted zone for thinkadi.com."
                 },
