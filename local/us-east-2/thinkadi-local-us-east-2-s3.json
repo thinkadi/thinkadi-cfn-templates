@@ -1,0 +1,28 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "ParmS3BFilesMetaBucketName": {
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "S3BFilesMeta": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": {
+                    "Ref": "ParmS3BFilesMetaBucketName"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "DualStackDomainName": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "S3BFilesMeta",
+                    "DualStackDomainName"
+                ]
+            }
+        }
+    }
+}
