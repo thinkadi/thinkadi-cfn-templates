@@ -3,6 +3,9 @@
     "Parameters": {
         "ParmS3BFilesMetaBucketName": {
             "Type": "String"
+        },
+        "ParmS3BFilesBucketName": {
+            "Type": "String"
         }
     },
     "Resources": {
@@ -11,6 +14,62 @@
             "Properties": {
                 "BucketName": {
                     "Ref": "ParmS3BFilesMetaBucketName"
+                }
+            }
+        },
+        "S3BFiles": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
+                },
+                "BucketName": {
+                    "Ref": "ParmS3BFilesBucketName"
+                },
+                "InventoryConfigurations": [
+                    {
+                        "Destination": {
+                            "BucketArn": {
+                                "Fn::GetAtt": [
+                                    "S3BFilesMeta",
+                                    "Arn"
+                                ]
+                            },
+                            "Format": "CSV"
+                        },
+                        "Enabled": "True",
+                        "Id": "Default",
+                        "IncludedObjectVersions": "All",
+                        "ScheduleFrequency": "Daily"
+                    }
+                ],
+                "LifecycleConfiguration": {
+                    "Rules": [
+                        {
+                            "Id": "1",
+                            "Status": "Enabled",
+                            "Transitions": [
+                                {
+                                    "StorageClass": "STANDARD_IA",
+                                    "TransitionInDays": "30"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "MetricsConfigurations": [
+                    {
+                        "Id": "1"
+                    }
+                ],
+                "VersioningConfiguration": {
+                    "Status": "Enabled"
                 }
             }
         }
