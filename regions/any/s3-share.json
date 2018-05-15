@@ -1,0 +1,28 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "ParmS3BFilesBucketName": {
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "S3BShare": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": {
+                    "Ref": "ParmS3BFilesBucketName"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "DualStackDomainName": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "S3BShare",
+                    "DualStackDomainName"
+                ]
+            }
+        }
+    }
+}
