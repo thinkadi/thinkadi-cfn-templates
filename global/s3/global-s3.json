@@ -1,0 +1,38 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "ParmS3BEntertainmentArchiveBucketName": {
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "S3BEntertainmentArchive": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": {
+                    "Ref": "ParmS3BEntertainmentArchiveBucketName"
+                },
+                "AccessControl": "Private",
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "S3BEntertainmentArchiveBucketArn": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "S3BEntertainmentArchive",
+                    "Arn"
+                ]
+            }
+        }
+    }
+}
