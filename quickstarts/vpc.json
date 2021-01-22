@@ -40,8 +40,35 @@
                 }
             },
             "DependsOn": [
-                "DHCPOptions",
-                "VPC"
+                "VPC",
+                "DHCPOptions"            ]
+        },
+        "InternetGateway": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    }
+                ]
+            }
+        },
+        "VPCGatewayAttachment": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "InternetGatewayId": {
+                    "Ref": "InternetGateway"
+                }
+            },
+            "DependsOn":[
+                "VPC",
+                "InternetGateway"
             ]
         }
     },
