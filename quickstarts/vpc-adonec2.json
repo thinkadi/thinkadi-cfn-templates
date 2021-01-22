@@ -412,6 +412,21 @@
                 }
             }
         },
+        "DomainMembersIngress": {
+            "Type": "AWS::EC2::SecurityGroupIngress",
+            "Properties": {
+                "Description": "RDP",
+                "FromPort": 3389,
+                "GroupId": {
+                    "Ref": "DomainMembersSG"
+                },
+                "IpProtocol": "tcp",
+                "SourceSecurityGroupId": {
+                    "Ref": "DomainMembersSG"
+                },
+                "ToPort": 3389
+            }
+        },
         "DomainControllersSG": {
             "Type": "AWS::EC2::SecurityGroup",
             "Properties": {
@@ -610,6 +625,24 @@
                 "VpcId": {
                     "Ref": "VPC"
                 }
+            },
+            "DependsOn": [
+                "DomainMembersSG"
+            ]
+        },
+        "DCSecurityGroupIngress": {
+            "Type": "AWS::EC2::SecurityGroupIngress",
+            "Properties": {
+                "Description": "Security Group Rule between Domain Controllers",
+                "FromPort": -1,
+                "GroupId": {
+                    "Ref": "DomainControllersSG"
+                },
+                "IpProtocol": "-1",
+                "SourceSecurityGroupId": {
+                    "Ref": "DomainControllersSG"
+                },
+                "ToPort": -1
             }
         }
     },
