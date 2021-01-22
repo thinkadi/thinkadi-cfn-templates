@@ -533,13 +533,85 @@
                             "Ref": "DomainMembersSG"
                         },
                         "ToPort": 464
+                    },
+                    {
+                        "Description": "LDAP over SSL",
+                        "FromPort": 636,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 636
+                    },
+                    {
+                        "Description": "LDAP Global Catalog",
+                        "FromPort": 3268,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 3268
+                    },
+                    {
+                        "Description": "LDAP Global Catalog over SSL",
+                        "FromPort": 3269,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 3269
+                    },
+                    {
+                        "Description": "RDP",
+                        "FromPort": 3389,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 3389
+                    },
+                    {
+                        "Description": "WinRM",
+                        "FromPort": 5985,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 5985
+                    },
+                    {
+                        "Description": "SOAP ADWS",
+                        "FromPort": 9389,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 9389
+                    },
+                    {
+                        "Description": "Random RPC",
+                        "FromPort": 49152,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 65535
+                    },
+                    {
+                        "Description": "Random RPC",
+                        "FromPort": 49152,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 65535
                     }
                 ],
                 "VpcId": {
                     "Ref": "VPC"
                 }
             }
-        },
+        }
     },
     "Outputs": {
         "VPCID": {
