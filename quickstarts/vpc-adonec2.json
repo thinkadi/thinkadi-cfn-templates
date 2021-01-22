@@ -41,7 +41,8 @@
             },
             "DependsOn": [
                 "VPC",
-                "DHCPOptions"            ]
+                "DHCPOptions"
+            ]
         },
         "InternetGateway": {
             "Type": "AWS::EC2::InternetGateway",
@@ -66,7 +67,7 @@
                     "Ref": "InternetGateway"
                 }
             },
-            "DependsOn":[
+            "DependsOn": [
                 "VPC",
                 "InternetGateway"
             ]
@@ -401,7 +402,144 @@
                     "Ref": "PublicSubnetRouteTable"
                 }
             }
-        }
+        },
+        "DomainMembersSG": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Domain Members",
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            }
+        },
+        "DomainControllersSG": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Domain Controllers Security Group",
+                "SecurityGroupIngress": [
+                    {
+                        "Description": "DNS",
+                        "FromPort": 53,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 53
+                    },
+                    {
+                        "Description": "DNS",
+                        "FromPort": 53,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 53
+                    },
+                    {
+                        "Description": "Kerberos",
+                        "FromPort": 88,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 88
+                    },
+                    {
+                        "Description": "Kerberos",
+                        "FromPort": 88,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 88
+                    },
+                    {
+                        "Description": "Windows Time",
+                        "FromPort": 123,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 123
+                    },
+                    {
+                        "Description": "RPC Port",
+                        "FromPort": 135,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 135
+                    },
+                    {
+                        "Description": "Netlogon",
+                        "FromPort": 138,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 138
+                    },
+                    {
+                        "Description": "LDAP",
+                        "FromPort": 389,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 389
+                    },
+                    {
+                        "Description": "LDAP",
+                        "FromPort": 389,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 389
+                    },
+                    {
+                        "Description": "SMB",
+                        "FromPort": 445,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 445
+                    },
+                    {
+                        "Description": "SMB",
+                        "FromPort": 445,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 445
+                    },
+                    {
+                        "Description": "Kerberos Set & Change Password",
+                        "FromPort": 464,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 464
+                    },
+                    {
+                        "Description": "Kerberos Set & Change Password",
+                        "FromPort": 464,
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Ref": "DomainMembersSG"
+                        },
+                        "ToPort": 464
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            }
+        },
     },
     "Outputs": {
         "VPCID": {
