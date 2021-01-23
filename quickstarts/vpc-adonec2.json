@@ -806,6 +806,17 @@
                 "RestoreModeSecrets",
                 "ADAltUserSecrets"
             ]
+        },
+        "ADServerProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "ADServerRole"
+                    }
+                ]
+            }
         }
     },
     "Outputs": {
