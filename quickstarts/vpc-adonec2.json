@@ -1,6 +1,24 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "Multi-AZ, multi-subnet VPC infrastructure",
+    "Parameters": {
+        "DomainAdminUser": {
+            "Type": "String",
+            "Default": "Admin",
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "Description": "User name for the account that will be added as a Domain Administrator. This is separate from the default 'Administrator' account",
+            "MaxLength": 25,
+            "MinLength": 5
+        },
+        "DomainAdminPassword": {
+            "Type": "String",
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "Description": "User name for the account that will be added as a Domain Administrator. This is separate from the default 'Administrator' account",
+            "MaxLength": 32,
+            "MinLength": 8,
+            "NoEcho": true
+        }
+    },
     "Resources": {
         "VPC": {
             "Type": "AWS::EC2::VPC",
@@ -644,6 +662,150 @@
                 },
                 "ToPort": -1
             }
+        },
+        "ADAdminSecrets": {
+            "Type": "AWS::SecretsManager::Secret",
+            "Properties": {
+                "Description": "Administrator Password for AD Quick Start",
+                "GenerateSecretString": {
+                    "ExcludeCharacters": "\"@/\"",
+                    "GenerateStringKey": "password",
+                    "PasswordLength": 30,
+                    "SecretStringTemplate": "{\"username\": \"Administrator\"}"
+                },
+                "Name": {
+                    "Fn::Sub": "ADAdministratorSecret-${AWS::StackName}"
+                }
+            }
+        },
+        "RestoreModeSecrets": {
+            "Type": "AWS::SecretsManager::Secret",
+            "Properties": {
+                "Description": "Restore Mode Password for AD Quick Start",
+                "GenerateSecretString": {
+                    "ExcludeCharacters": "\"@/\"",
+                    "GenerateStringKey": "password",
+                    "PasswordLength": 30,
+                    "SecretStringTemplate": "{\"username\": \"Administrator\"}"
+                },
+                "Name": {
+                    "Fn::Sub": "RestoreModeSecrets-${AWS::StackName}"
+                }
+            }
+        },
+        "ADAltUserSecrets": {
+            "Type": "AWS::SecretsManager::Secret",
+            "Properties": {
+                "Description": "Alternate AD Admin User from AD Quick Start",
+                "SecretString": {
+                    "Fn::Sub": "{ \"username\" :\"${DomainAdminUser}\", \"password\" : \"${DomainAdminPassword}\" }"
+                },
+                "Name": {
+                    "Fn::Sub": "ADAltUserSecrets-${AWS::StackName}"
+                }
+            }
+        },
+        "ADServerRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    {
+                        "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
+                    },
+                    {
+                        "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/CloudWatchAgentServerPolicy"
+                    }
+                ],
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "AWS-Mgmt-Quick-Start-Policy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "s3:ListBucket",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "s3:GetObject",
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "ec2:DescribeInstances",
+                                        "ssm:DescribeInstanceInformation",
+                                        "ssm:ListCommands",
+                                        "ssm:ListCommandInvocations",
+                                        "ssm:SendCommand",
+                                        "ssm:StartAutomationExecution"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudformation:SignalResource"
+                                    ],
+                                    "Resource": {
+                                        "Fn::Sub": "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}/*"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "PolicyName": "AWS-Mgd-AD-Secret-Policy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "secretsmanager:GetSecretValue",
+                                        "secretsmanager:DescribeSecret"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Ref": "ADAdminSecrets"
+                                        },
+                                        {
+                                            "Ref": "RestoreModeSecrets"
+                                        },
+                                        {
+                                            "Ref": "ADAltUserSecrets"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "DependsOn": [
+                "ADAdminSecrets",
+                "RestoreModeSecrets",
+                "ADAltUserSecrets"
+            ]
         }
     },
     "Outputs": {
