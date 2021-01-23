@@ -817,6 +817,157 @@
                     }
                 ]
             }
+        },
+        "AWSQuickstartActiveDirectoryDS": {
+            "Type": "AWS::SSM::Document",
+            "Properties": {
+                "Content": {
+                    "description": "Deploy AD with SSM Automation",
+                    "schemaVersion": "0.3",
+                    "parameters": {
+                        "VPCCIDR": {
+                            "type": "String",
+                            "description": "CIDR Block for the VPC",
+                            "default": "10.0.0.0/16"
+                        },
+                        "ADServer1NetBIOSName": {
+                            "type": "String",
+                            "description": "NetBIOS name of the first Active Directory Domain Controller (up to 15 characters)",
+                            "default": "DC1"
+                        },
+                        "ADServer1PrivateIP": {
+                            "type": "String",
+                            "description": "Fixed private IP for the first Active Directory Domain Controller located in Availability Zone 1",
+                            "default": "10.0.0.10"
+                        },
+                        "ADServer2NetBIOSName": {
+                            "type": "String",
+                            "description": "NetBIOS name of the second Active Directory Domain Controller (up to 15 characters)",
+                            "default": "DC2"
+                        },
+                        "ADServer2PrivateIP": {
+                            "type": "String",
+                            "description": "Fixed private IP for the second Active Directory Domain Controller located in Availability Zone 2",
+                            "default": "10.0.32.10"
+                        },
+                        "ADAdminSecParamName": {
+                            "type": "String",
+                            "description": "AWS Secrets Parameter Name that has Password and User namer for the built-in administrator"
+                        },
+                        "ADAltUserSecParamName": {
+                            "type": "String",
+                            "description": "AWS Secrets Parameter Name for the account that will be added as Domain Administrator. This is separate from the built-in Administrator account"
+                        },
+                        "RestoreModeSecParamName": {
+                            "type": "String",
+                            "description": "AWS Secrets Parameter Name for the Active Directory Restore Mode Password"
+                        },
+                        "DomainDNSName": {
+                            "type": "String",
+                            "description": "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com",
+                            "default": "example.com"
+                        },
+                        "DomainNetBIOSName": {
+                            "type": "String",
+                            "description": "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
+                            "default": "example"
+                        },
+                        "CreateDefaultOUs": {
+                            "type": "String",
+                            "description": "Create Domain Elevated Accounts, Domain Users, Domain Computers, Domain Servers, Domain Service Accounts, and Domain Groups OUs",
+                            "default": "No"
+                        },
+                        "TombstoneLifetime": {
+                            "type": "String",
+                            "description": "The number of days before a deleted object is removed from the directory services",
+                            "default": "180"
+                        },
+                        "DeletedObjectLifetime": {
+                            "type": "String",
+                            "description": "he number of days before a deleted object is removed from the directory services recycling bin",
+                            "default": "180"
+                        },
+                        "QSS3BucketName": {
+                            "type": "String",
+                            "description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)",
+                            "default": "aws-quickstart"
+                        },
+                        "QSS3BucketRegion": {
+                            "type": "String",
+                            "description": "The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value",
+                            "default": "us-east-1"
+                        },
+                        "QSS3KeyPrefix": {
+                            "type": "String",
+                            "description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)",
+                            "default": "quickstart-microsoft-activedirectory/"
+                        },
+                        "StackName": {
+                            "type": "String",
+                            "description": "Stack Name Input for cfn resource signal"
+                        },
+                        "URLSuffix": {
+                            "type": "String",
+                            "description": "AWS URL suffix",
+                            "default": "amazonaws.com"
+                        }
+                    },
+                    "mainSteps": [
+                        {
+                            "name": "dcsInstanceIds",
+                            "action": "aws:executeAwsApi",
+                            "onFailure": "step:signalfailure",
+                            "maxAttempts": 1,
+                            "inputs": {
+                                "Service": "ec2",
+                                "Api": "DescribeInstances",
+                                "Filters": [
+                                    {
+                                        "Name": "tag:Name",
+                                        "Values": [
+                                            "{{ADServer1NetBIOSName}}",
+                                            "{{ADServer2NetBIOSName}}"
+                                        ]
+                                    },
+                                    {
+                                        "Name": "tag:aws:cloudformation:stack-name",
+                                        "Values": [
+                                            "{{StackName}}"
+                                        ]
+                                    },
+                                    {
+                                        "Name": "instance-state-name",
+                                        "Values": [
+                                            "running"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "outputs": [
+                                {
+                                    "Name": "InstanceIds",
+                                    "Selector": "$.Reservations..Instances..InstanceId",
+                                    "Type": "StringList"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "signalfailure",
+                            "action": "aws:executeAwsApi",
+                            "maxAttempts": 1,
+                            "inputs": {
+                                "Service": "cloudformation",
+                                "Api": "SignalResource",
+                                "LogicalResourceId": "DomainController2",
+                                "StackName": "{{StackName}}",
+                                "Status": "FAILURE",
+                                "UniqueId": "{{dc2InstanceId.InstanceId}}"
+                            }
+                        }
+                    ]
+                },
+                "DocumentType": "Automation"
+            }
         }
     },
     "Outputs": {
