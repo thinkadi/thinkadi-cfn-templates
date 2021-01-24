@@ -1200,6 +1200,7 @@
                             "name": "PostConfig",
                             "description": "Cleanup and finalize setup.",
                             "action": "aws:runCommand",
+                            "nextStep": "CFNSignalEnd",
                             "onFailure": "step:signalfailure",
                             "inputs": {
                                 "DocumentName": "AWS-RunRemoteScript",
@@ -1217,6 +1218,50 @@
                                     "sourceInfo": "{\"path\": \"https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-activedirectory/scripts/Post-Config.ps1\"}",
                                     "commandLine": "./Post-Config.ps1 -S3BucketName {{QSS3BucketName}} -S3KeyPrefix {{QSS3KeyPrefix}} -VPCCIDR {{VPCCIDR}} -CreateDefaultOUs {{CreateDefaultOUs}} -TombstoneLifetime {{TombstoneLifetime}} -DeletedObjectLifetime {{DeletedObjectLifetime}}"
                                 }
+                            }
+                        },
+                        {
+                            "name": "CFNSignalEnd",
+                            "description": "Determines if CFN Needs to be Signaled or if Work flow should just end.",
+                            "action": "aws:branch",
+                            "inputs": {
+                                "Choices": [
+                                    {
+                                        "NextStep": "signalsuccess",
+                                        "Not": {
+                                            "Variable": "{{StackName}}",
+                                            "StringEquals": ""
+                                        }
+                                    },
+                                    {
+                                        "NextStep": "sleepend",
+                                        "Variable": "{{StackName}}",
+                                        "StringEquals": ""
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "name": "signalsuccess",
+                            "description": "If all steps complete successfully signals CFN of Success.",
+                            "action": "aws:executeAwsApi",
+                            "isEnd": true,
+                            "inputs": {
+                                "Service": "cloudformation",
+                                "Api": "SignalResource",
+                                "LogicalResourceId": "DomainController2",
+                                "StackName": "{{StackName}}",
+                                "status": "SUCCESS",
+                                "UniqueId": "{{dc2InstanceId.InstanceId}}"
+                            }
+                        },
+                        {
+                            "name": "sleepend",
+                            "description": "If CFN Signl Not Needed this sleep ends work flow.",
+                            "action": "aws:sleep",
+                            "isEnd": true,
+                            "inputs": {
+                                "Duration": "PT1S"
                             }
                         },
                         {
