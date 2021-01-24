@@ -191,6 +191,35 @@
                 ]
             }
         },
+        "PrivateSubnet1ARouteTable": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Private Subnet 1A"
+                    },
+                    {
+                        "Key": "Network",
+                        "Value": "Private"
+                    }
+                ]
+            }
+        },
+        "PrivateSubnet1ARouteTableAssociation": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "SubnetId": {
+                    "Ref": "PrivateSubnet1A"
+                },
+                "RouteTableId": {
+                    "Ref": "PrivateSubnet1ARouteTable"
+                }
+            }
+        },
         "PrivateSubnet2A": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
@@ -205,6 +234,35 @@
                         "Value": "Private Subnet 2A"
                     }
                 ]
+            }
+        },
+        "PrivateSubnet2ARouteTable": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPC"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Private Subnet 2A"
+                    },
+                    {
+                        "Key": "Network",
+                        "Value": "Private"
+                    }
+                ]
+            }
+        },
+        "PrivateSubnet2ARouteTableAssociation": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "SubnetId": {
+                    "Ref": "PrivateSubnet2A"
+                },
+                "RouteTableId": {
+                    "Ref": "PrivateSubnet2ARouteTable"
+                }
             }
         },
         "DomainMembersSG": {
@@ -1076,102 +1134,6 @@
                 "Ref": "VPC"
             },
             "Description": "VPC ID"
-        },
-        "PublicSubnet1ID": {
-            "Value": {
-                "Ref": "PublicSubnet1"
-            },
-            "Description": "Public Subnet 1 ID"
-        },
-        "PublicSubnet2ID": {
-            "Value": {
-                "Ref": "PublicSubnet2"
-            },
-            "Description": "Public Subnet 2 ID"
-        },
-        "PublicSubnet3ID": {
-            "Value": {
-                "Ref": "PublicSubnet3"
-            },
-            "Description": "Public Subnet 3 ID"
-        },
-        "PublicSubnet4ID": {
-            "Value": {
-                "Ref": "PublicSubnet4"
-            },
-            "Description": "Public Subnet 4 ID"
-        },
-        "PrivateSubnet1AID": {
-            "Value": {
-                "Ref": "PrivateSubnet1A"
-            },
-            "Description": "Private Subnet 1A ID"
-        },
-        "PrivateSubnet2AID": {
-            "Value": {
-                "Ref": "PrivateSubnet2A"
-            },
-            "Description": "Private Subnet 2A ID"
-        },
-        "PrivateSubnet3AID": {
-            "Value": {
-                "Ref": "PrivateSubnet3A"
-            },
-            "Description": "Private Subnet 3A ID"
-        },
-        "PrivateSubnet4AID": {
-            "Value": {
-                "Ref": "PrivateSubnet4A"
-            },
-            "Description": "Private Subnet 4A ID"
-        },
-        "PrivateSubnet1BID": {
-            "Value": {
-                "Ref": "PrivateSubnet1B"
-            },
-            "Description": "Private Subnet 1B ID"
-        },
-        "PrivateSubnet2BID": {
-            "Value": {
-                "Ref": "PrivateSubnet2B"
-            },
-            "Description": "Private Subnet 2B ID"
-        },
-        "PrivateSubnet3BID": {
-            "Value": {
-                "Ref": "PrivateSubnet3B"
-            },
-            "Description": "Private Subnet 3B ID"
-        },
-        "PrivateSubnet4BID": {
-            "Value": {
-                "Ref": "PrivateSubnet4B"
-            },
-            "Description": "Private Subnet 4B ID"
-        },
-        "PrivateSubnet1CID": {
-            "Value": {
-                "Ref": "PrivateSubnet1C"
-            },
-            "Description": "Private Subnet 1C ID"
-        },
-        "PrivateSubnet2CID": {
-            "Value": {
-                "Ref": "PrivateSubnet2C"
-            },
-            "Description": "Private Subnet 2C ID"
-        },
-        "PrivateSubnet3CID": {
-            "Value": {
-                "Ref": "PrivateSubnet3C"
-            },
-            "Description": "Private Subnet 3C ID"
-        },
-        "PrivateSubnet4CID": {
-            "Value": {
-                "Ref": "PrivateSubnet4C"
-            },
-            "Description": "Private Subnet 4C ID"
         }
     }
 }
