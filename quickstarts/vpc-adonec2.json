@@ -1152,6 +1152,7 @@
                             "name": "configDC2",
                             "description": "Kicks off DSC Configuration and loops\reboots until Node matches Configuration defined in MOF file.",
                             "action": "aws:runCommand",
+                            "nextStep": "DnsConfig",
                             "onFailure": "step:signalfailure",
                             "inputs": {
                                 "DocumentName": "AWS-RunPowerShellScript",
@@ -1168,6 +1169,53 @@
                                     "commands": [
                                         "function DscStatusCheck () {\n$LCMState = (Get-DscLocalConfigurationManager).LCMState\nif ($LCMState -eq 'PendingConfiguration' -Or $LCMState -eq 'PendingReboot') {\n'returning 3010, should continue after reboot'\nexit 3010\n} else {\n'Completed'\n}\n}\n\nStart-DscConfiguration 'C:\\AWSQuickstart\\ConfigDC2' -Wait -Verbose -Force\n\nDscStatusCheck"
                                     ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "DnsConfig",
+                            "description": "Ensure that AD servers point to themselves for DNS.",
+                            "action": "aws:runCommand",
+                            "nextStep": "PostConfig",
+                            "onFailure": "step:signalfailure",
+                            "inputs": {
+                                "DocumentName": "AWS-RunRemoteScript",
+                                "InstanceIds": [
+                                    "{{dc2InstanceId.InstanceId}}"
+                                ],
+                                "CloudWatchOutputConfig": {
+                                    "CloudWatchOutputEnabled": true,
+                                    "CloudWatchLogGroupName": {
+                                        "Fn::Sub": "/aws/Quick_Start/${AWS::StackName}"
+                                    }
+                                },
+                                "Parameters": {
+                                    "sourceType": "S3",
+                                    "sourceInfo": "{\"path\": \"https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-activedirectory/scripts/Dns-Config.ps1\"}",
+                                    "commandLine": "./Dns-Config.ps1 -ADServer1NetBIOSName {{ADServer1NetBIOSName}} -ADServer2NetBIOSName {{ADServer2NetBIOSName}} -ADServer1PrivateIP {{ADServer1PrivateIP}} -ADServer2PrivateIP {{ADServer2PrivateIP}} -DomainDNSName {{DomainDNSName}} -ADAdminSecParam {{ADAdminSecParamName}}"
+                                }
+                            }
+                        },
+                        {
+                            "name": "PostConfig",
+                            "description": "Cleanup and finalize setup.",
+                            "action": "aws:runCommand",
+                            "onFailure": "step:signalfailure",
+                            "inputs": {
+                                "DocumentName": "AWS-RunRemoteScript",
+                                "InstanceIds": [
+                                    "{{dcsInstanceIds.InstanceIds}}"
+                                ],
+                                "CloudWatchOutputConfig": {
+                                    "CloudWatchOutputEnabled": true,
+                                    "CloudWatchLogGroupName": {
+                                        "Fn::Sub": "/aws/Quick_Start/${AWS::StackName}"
+                                    }
+                                },
+                                "Parameters": {
+                                    "sourceType": "S3",
+                                    "sourceInfo": "{\"path\": \"https://aws-quickstart.s3.amazonaws.com/quickstart-microsoft-activedirectory/scripts/Post-Config.ps1\"}",
+                                    "commandLine": "./Post-Config.ps1 -S3BucketName {{QSS3BucketName}} -S3KeyPrefix {{QSS3KeyPrefix}} -VPCCIDR {{VPCCIDR}} -CreateDefaultOUs {{CreateDefaultOUs}} -TombstoneLifetime {{TombstoneLifetime}} -DeletedObjectLifetime {{DeletedObjectLifetime}}"
                                 }
                             }
                         },
