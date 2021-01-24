@@ -264,6 +264,18 @@
                 }
             }
         },
+        "PrivateSubnet1ARoute": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "PrivateSubnet1ARouteTable"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {
+                    "Ref": "NATGateway1"
+                }
+            }
+        },
         "PrivateSubnet2A": {
             "Type": "AWS::EC2::Subnet",
             "Properties": {
@@ -306,6 +318,18 @@
                 },
                 "RouteTableId": {
                     "Ref": "PrivateSubnet2ARouteTable"
+                }
+            }
+        },
+        "PrivateSubnet2ARoute": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "PrivateSubnet2ARouteTable"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {
+                    "Ref": "NATGateway2"
                 }
             }
         },
