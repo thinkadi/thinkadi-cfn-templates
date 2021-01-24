@@ -122,230 +122,6 @@
                 ]
             }
         },
-        "PublicSubnet3": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.32.0/20",
-                "AvailabilityZone": "us-west-2c",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Public Subnet 3"
-                    }
-                ]
-            }
-        },
-        "PublicSubnet4": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.48.0/20",
-                "AvailabilityZone": "us-west-2d",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Public Subnet 4"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet1A": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.64.0/19",
-                "AvailabilityZone": "us-west-2a",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 1A"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet2A": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.96.0/19",
-                "AvailabilityZone": "us-west-2b",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 2A"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet3A": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.128.0/19",
-                "AvailabilityZone": "us-west-2c",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 3A"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet4A": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.160.0/19",
-                "AvailabilityZone": "us-west-2d",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 4A"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet1B": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.192.0/21",
-                "AvailabilityZone": "us-west-2a",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 1B"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet2B": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.200.0/21",
-                "AvailabilityZone": "us-west-2b",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 2B"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet3B": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.208.0/21",
-                "AvailabilityZone": "us-west-2c",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 3B"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet4B": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.216.0/21",
-                "AvailabilityZone": "us-west-2d",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 4B"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet1C": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.224.0/21",
-                "AvailabilityZone": "us-west-2a",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 1C"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet2C": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.232.0/21",
-                "AvailabilityZone": "us-west-2b",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 2C"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet3C": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.240.0/21",
-                "AvailabilityZone": "us-west-2c",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 3C"
-                    }
-                ]
-            }
-        },
-        "PrivateSubnet4C": {
-            "Type": "AWS::EC2::Subnet",
-            "Properties": {
-                "VpcId": {
-                    "Ref": "VPC"
-                },
-                "CidrBlock": "10.0.248.0/21",
-                "AvailabilityZone": "us-west-2d",
-                "Tags": [
-                    {
-                        "Key": "Name",
-                        "Value": "Private Subnet 4C"
-                    }
-                ]
-            }
-        },
         "PublicSubnetRouteTable": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
@@ -399,26 +175,36 @@
                 }
             }
         },
-        "PublicSubnet3RouteTableAssociation": {
-            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "PrivateSubnet1A": {
+            "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "SubnetId": {
-                    "Ref": "PublicSubnet3"
+                "VpcId": {
+                    "Ref": "VPC"
                 },
-                "RouteTableId": {
-                    "Ref": "PublicSubnetRouteTable"
-                }
+                "CidrBlock": "10.0.64.0/19",
+                "AvailabilityZone": "us-west-2a",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Private Subnet 1A"
+                    }
+                ]
             }
         },
-        "PublicSubnet4RouteTableAssociation": {
-            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "PrivateSubnet2A": {
+            "Type": "AWS::EC2::Subnet",
             "Properties": {
-                "SubnetId": {
-                    "Ref": "PublicSubnet4"
+                "VpcId": {
+                    "Ref": "VPC"
                 },
-                "RouteTableId": {
-                    "Ref": "PublicSubnetRouteTable"
-                }
+                "CidrBlock": "10.0.96.0/19",
+                "AvailabilityZone": "us-west-2b",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Private Subnet 2A"
+                    }
+                ]
             }
         },
         "DomainMembersSG": {
